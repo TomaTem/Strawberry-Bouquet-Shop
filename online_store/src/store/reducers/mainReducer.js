@@ -78,17 +78,9 @@ function mainReducer(state = initialState, action = {}) {
         .filter((item) => item.quantity > 0);
       return { ...state, cart: updatedCart, totalCart: cartSum(updatedCart) };
     }
-    // case mainTypes.COUNT_CART: {
-    //   const { cart } = state;
-    //   const orderItem = action.payload;
-    //   const updatedCart = cart.map((id) => {
-    //     if (orderItem.id === id) {
-    //     return { ...state, totalCard: cart.reduce((acc, itemsprice) => {
-    //       return acc + itemsprice
-    //     }, 0) }
-    //   }})
-    //  return {...state, cart: updatedCart};
-    // }
+    case mainTypes.DELETE_CART: {
+      const { cart } = state;
+    }
     default: {
       return state;
     }

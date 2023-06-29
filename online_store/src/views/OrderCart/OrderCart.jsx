@@ -1,57 +1,54 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styles from './orderCart.module.scss';
 import { CloseOutlined, UpOutlined, DownOutlined } from '@ant-design/icons';
-// import {deleteCartAC} from '../../store/actions/mainActions';
-// import { useDispatch } from 'react-redux';
-// import { useParams } from 'react-router-dom';
 import useProductList from '../../hooks/useProductList';
+import { addToCartAC, removeFromCartAC } from '../../store/actions/mainActions';
 
-
-// function OrderCart({product, increase, decrease, count, id}) {
   function OrderCart({product}) {
 
-    const { price, berries, topper, id, quantity } = product;
+    const { price, berries, topper, id, quantity, itemsprice } = product;
 
-    const [count, setCount] = useState(quantity)
-    const [sum, setSum] = useState(price*count)
+    const dispatch = useDispatch(); 
 
-    // const dispatch = useDispatch();    
- 
-    // const increase = () => {
-    //   dispatch(countCartAC(orderItem));
-    // };
-
-    const increase = (id) => {
-      if (product.id === id) {
-        let newCount = count;
-        newCount++;
-        let newSum = price*newCount;
-        setCount(newCount);
-        setSum(newSum)
+    const increase = (orderItem) => {
+        orderItem = {
+          id: 0,
+          sku: product.sku,
+          berries: 'none',
+          topper: 'none',
+          quantity: 1,
+          price: product.price, 
+          itemsprice: product.price,
+        };
+          dispatch(addToCartAC(orderItem));
       }
-      return product
-    }
 
-    const decrease = (id) => {
-      if (product.id === id) {
-        const lowerCount = count - 1 > 1 ? count - 1 : 1;
-        let lowerSum = price*lowerCount;
-        setCount(lowerCount);
-        setSum(lowerSum)
-        }
-      return product
-    }
+      const decrease = (orderItem) => {
+        orderItem = {
+          id: 0,
+          sku: product.sku,
+          berries: 'none',
+          topper: 'none',
+          quantity: 1,
+          price: product.price, 
+          itemsprice: product.price,
+        };
+        dispatch(removeFromCartAC(orderItem.sku));  
+      }
+
+    // const decrease = (id) => {
+    //   if (product.id === id) {
+    //     const lowerCount = count - 1 > 1 ? count - 1 : 1;
+    //     let lowerSum = price*lowerCount;
+    //     setCount(lowerCount);
+    //     setSum(lowerSum)
+    //     }
+    //   return product
+    // }
 
   const productData = useProductList(product.sku)
-  console.log(productData, product)
-  
-    // const {id} = useParams();
-    // const dispatch = useDispatch();
-    // const deleteCart = (id) => {
-    //     dispatch(deleteCartAC(id))
-    //     console.log('delete', id)
-    // }
 
     if (!productData) {
       return <div>loading</div>
@@ -59,12 +56,10 @@ import useProductList from '../../hooks/useProductList';
 
     return (
         <>
-         
           <section className={styles.order__wrap}>
           <div className={styles.cart__body}>
             <div className={styles.bouquetPic}>
               <img className={styles.cartPic} 
-              // src=''
               src={productData.photos[0]} 
               alt='choicePic' 
               />
@@ -85,19 +80,18 @@ import useProductList from '../../hooks/useProductList';
           </div>
           
           <div className={styles.quantity}>
-            <div className={styles.count}>{count}</div>
-            {/* <input type='text' className={styles.count__input} min='1' value={quantity} onChange={(e) => changeValue(id, +e.target.value)} /> */}
+            <div className={styles.count}>{quantity}</div>
             <div className={styles.control}>
-            <button className={styles.button__quantity} onClick={() => increase(id)}>
+            <button className={styles.button__quantity} onClick={() => increase()}>
               <UpOutlined />
             </button>
-            <button className={styles.button__quantity} onClick={() => decrease(id)}>
+            <button className={styles.button__quantity} onClick={() => decrease()}>
               <DownOutlined />
             </button>
             </div>
           </div>
-          <div className='price'>{sum}</div>
-          <div className='delete'>
+          <div className={styles.price}>{itemsprice}</div>
+          <div className={styles.delete}>
             <CloseOutlined
             // onClick={() => deleteCart(id)}/
             />

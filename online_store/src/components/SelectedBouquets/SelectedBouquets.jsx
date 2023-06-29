@@ -7,19 +7,11 @@ import OrderCart from '../../views/OrderCart/OrderCart';
 
 function SelectedBouquets() {
   const { cart } = useSelector((store) => store.mainStore);
-  const { totalCart} = useSelector((store) => store.mainStore);
-  console.log(totalCart)
- 
-  const products = cart.map(product =>{
-   return <OrderCart product = {product} key = {product.id} />
-  })
+  const { totalCart } = useSelector((store) => store.mainStore);
 
-  // const [total, setTotal] = useState(
-  //   cart.reduce((prev, curr) => {
-  //     return prev + curr.sum
-  //   }, 0)
-  // )
-  // productList.forEach(el => sum += Number.parseFloat(el.price))
+  const products = cart.map((product) => {
+    return <OrderCart product={product} key={product.id} />;
+  });
 
   return (
     <>
@@ -35,8 +27,7 @@ function SelectedBouquets() {
       <div className={styles.table__footer}>
         <div className={styles.sum}>Сумма заказa </div>
         <div className={styles.summary}>
-          {totalCart}
-           рублей</div>
+          {totalCart}  рублей</div>
       </div>
       
     </>
