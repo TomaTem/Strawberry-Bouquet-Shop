@@ -80,7 +80,28 @@ function mainReducer(state = initialState, action = {}) {
     }
     case mainTypes.DELETE_CART: {
       const { cart } = state;
+      const skuFound = action.payload;
+      let itemFound = false;
+      const updatedCart = cart
+        // .toReversed()
+        .map((item) => {
+          if (!itemFound && item.sku === skuFound) {
+            itemFound = true;
+            // if (item.quantity > 0) {
+              return {
+                ...item,
+                quantity: 0,
+                itemsprice: 0
+              };
+            // }
+          }
+          return item;
+        })
+        .reverse()
+        .filter((item) => item.quantity > 0);
+      return { ...state, cart: updatedCart, totalCart: cartSum(updatedCart) };
     }
+    // }
     default: {
       return state;
     }

@@ -38,15 +38,10 @@ import { addToCartAC, removeFromCartAC } from '../../store/actions/mainActions';
         dispatch(removeFromCartAC(orderItem.sku));  
       }
 
-    // const decrease = (id) => {
-    //   if (product.id === id) {
-    //     const lowerCount = count - 1 > 1 ? count - 1 : 1;
-    //     let lowerSum = price*lowerCount;
-    //     setCount(lowerCount);
-    //     setSum(lowerSum)
-    //     }
-    //   return product
-    // }
+      const deleteCart = () => {
+        
+      }
+
 
   const productData = useProductList(product.sku)
 
