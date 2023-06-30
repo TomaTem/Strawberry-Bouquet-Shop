@@ -4,11 +4,11 @@ import { Link } from 'react-router-dom';
 import styles from './orderCart.module.scss';
 import { CloseOutlined, UpOutlined, DownOutlined } from '@ant-design/icons';
 import useProductList from '../../hooks/useProductList';
-import { addToCartAC, removeFromCartAC } from '../../store/actions/mainActions';
+import { addToCartAC, removeFromCartAC, deleteCartAC } from '../../store/actions/mainActions';
 
   function OrderCart({product}) {
 
-    const { price, berries, topper, id, quantity, itemsprice } = product;
+    const { berries, topper, id, quantity, itemsprice } = product;
 
     const dispatch = useDispatch(); 
 
@@ -38,10 +38,9 @@ import { addToCartAC, removeFromCartAC } from '../../store/actions/mainActions';
         dispatch(removeFromCartAC(orderItem.sku));  
       }
 
-      const deleteCart = () => {
-        
+      function deleteCart(orderItem) {
+        dispatch(deleteCartAC(orderItem))
       }
-
 
   const productData = useProductList(product.sku)
 
@@ -88,7 +87,7 @@ import { addToCartAC, removeFromCartAC } from '../../store/actions/mainActions';
           <div className={styles.price}>{itemsprice}</div>
           <div className={styles.delete}>
             <CloseOutlined
-            // onClick={() => deleteCart(id)}/
+            onClick={() => deleteCart(id)}
             />
           </div>      
        </section>
