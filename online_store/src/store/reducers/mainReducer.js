@@ -81,8 +81,8 @@ function mainReducer(state = initialState, action = {}) {
     case mainTypes.DELETE_CART: {
       const { cart } = state;
       const id = action.payload;
-      const updatedCart = cart.filter(el => el.id!=id)
-      return {...state, cart: updatedCart, totalCart: cartSum(updatedCart)}
+      const updatedCart = cart.filter((el) => el.id !== id);
+      return { ...state, cart: updatedCart, totalCart: cartSum(updatedCart) };
     }
     default: {
       return state;
