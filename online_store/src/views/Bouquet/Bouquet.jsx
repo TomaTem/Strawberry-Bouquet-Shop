@@ -70,7 +70,7 @@ export default function Bouquet() {
     return <div>Loading...</div>;
   }
 
-  handleAddToCart()
+  handleAddToCart();
 
   return (
     <div className={styles.container}>
@@ -137,7 +137,7 @@ export default function Bouquet() {
                 />
               </div>
               <div className="button">
-              <AddToCartBtn orderItem={orderItem} onClick={handleAddToCart}/>
+                <AddToCartBtn orderItem={orderItem} onClick={handleAddToCart} />
                 {/* <Button
                   type="primary"
                   size={size}

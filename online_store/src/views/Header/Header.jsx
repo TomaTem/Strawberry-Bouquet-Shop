@@ -46,18 +46,18 @@ export default function Header() {
         </section>
       </div>
       <Menu mode="horizontal" className={styles.header}>
-      <NavLink to="/">
-        <Menu.Item key="home" id={styles.btn} className={styles.menu__item}>Главная</Menu.Item>
-      </NavLink>
-      <NavLink to="/about">
-        <Menu.Item key="about" id={styles.btn} className={styles.menu__item}>О нас</Menu.Item>
-      </NavLink>
-      <NavLink to="/orderlist">
-        <Menu.Item key="orderlist" id={styles.btn} className={styles.menu__item} >Заказы</Menu.Item>
-      </NavLink>
-      <NavLink to="/cart">
-        <Menu.Item key="cart" id={styles.btn} className={styles.menu__item}>Корзина</Menu.Item>
-      </NavLink>
+        <NavLink to="/">
+          <Menu.Item key="home" id={styles.btn} className={styles.menu__item}>Главная</Menu.Item>
+        </NavLink>
+        <NavLink to="/about">
+          <Menu.Item key="about" id={styles.btn} className={styles.menu__item}>О нас</Menu.Item>
+        </NavLink>
+        <NavLink to="/orderlist">
+          <Menu.Item key="orderlist" id={styles.btn} className={styles.menu__item}>Заказы</Menu.Item>
+        </NavLink>
+        <NavLink to="/cart">
+          <Menu.Item key="cart" id={styles.btn} className={styles.menu__item}>Корзина</Menu.Item>
+        </NavLink>
       </Menu>
     </div>
 

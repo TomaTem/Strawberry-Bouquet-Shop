@@ -1,10 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useState } from 'react';
-// import { useSelector } from 'react-redux';
-// import { sendOrderThunk } from '../../store/actions/mainActions';
-// import { submitFormAC } from '../../store/actions/mainActions';
-import { useNavigate } from 'react-router-dom';
-// eslint-disable-next-line import/no-extraneous-dependencies
+/* eslint-disable camelcase */
+import React, { useState, useCallback } from 'react';
+import { useSelector } from 'react-redux';
 import { useForm, Controller } from 'react-hook-form';
 
 import {
@@ -14,51 +11,128 @@ import {
   Space,
   Select,
   Radio,
+  Modal,
 } from 'antd';
 
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api'; // useLoadScript
+import { useJsApiLoader } from '@react-google-maps/api';
 import styles from './order-form.module.scss';
+
+import PlacesAutocomplete from './Auto';
+import { Map, MODES } from './Map';
+
+import useProductList from '../../hooks/useProductList';
 
 const { Text, Paragraph } = Typography;
 
 const API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
-const containerStyle = {
-  width: '100%',
-  height: '100%',
+
+const defaultCenter = {
+  lat: 34.69705133064743,
+  lng: 33.09065538465354,
 };
 
-// const libraries = ['places'];
-
-function Map() {
-  return (
-    <GoogleMap
-      zoom={10}
-      center={{ lat: 34.69705133064743, lng: 33.09065538465354 }}
-      mapContainerStyle={containerStyle}
-    >
-      <Marker position={{ lat: 34.69705133064743, lng: 33.09065538465354 }} />
-    </GoogleMap>
-  );
-}
-
 function OrderForm() {
-  const [radio, setRadio] = useState('no');
-  const navigate = useNavigate();
-  // const dispatch = useDispatch();
+  const [center, setCenter] = useState(defaultCenter);
+  const [mode, setMode] = useState(MODES.MOVE);
+  const [markers, setMarkers] = useState([]);
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: API_KEY,
   });
 
-  const { control, handleSubmit } = useForm();
-  // const { products } = useSelector((store) => store.mainStore);
+  const product = useProductList();
+  console.log(product[0]);
+
+  const onPlaceSelect = useCallback(
+    (coordinates) => {
+      setCenter(coordinates);
+    },
+    [],
+  );
+
+  const [radio, setRadio] = useState('no');
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
+  const { control, handleSubmit, reset } = useForm();
+  const { cart } = useSelector((store) => store.mainStore);
+  const { totalCart } = useSelector((store) => store.mainStore);
+
+  let deliveryPrice = 0;
+
+  if (radio === 'yes') {
+    deliveryPrice = 500;
+  } else {
+    deliveryPrice = 0;
+  }
+
+  const totalPrice = totalCart + deliveryPrice;
 
   const onSubmit = (data) => {
-    console.log(JSON.stringify(data));
-    navigate('/orderlist');
+    const order = cart.reduce((acc, el) => {
+      const obj = {
+        sku: String(el.sku),
+        count: el.quantity,
+        product_price: el.price,
+        product_details: {
+          berries: el.berries,
+          topping: el.topper,
+        },
+      };
+      acc.push(obj);
+      return acc;
+    }, []);
+
+    const orderData = {
+      products: order,
+      data,
+      price: {
+        order_price: totalCart,
+        delivery_price: deliveryPrice,
+        total_price: totalPrice,
+      },
+    };
+
+    console.log(`Данные на сервер: ${JSON.stringify(orderData)}`);
+
+    // const res = await fetch('https://strawberry.nmsc.pchapl.dev/order', {
+    //   method: 'POST',
+    //   body: JSON.stringify(orderData),
+    // });
+    // if (res.status === 200) {
+    //   // setIsModalOpen(true);
+    // } else {
+    //   console.log('Error');
+    // }
+    setIsModalOpen(true);
+    reset();
+    setRadio('no');
   };
+
+  const toggleMode = useCallback(() => {
+    switch (mode) {
+      case MODES.MOVE:
+        setMode(MODES.SET_MARKER);
+        break;
+      case MODES.SET_MARKER:
+        setMode(MODES.MOVE);
+        break;
+      default:
+        setMode(MODES.MOVE);
+    }
+    console.log(mode);
+  }, [mode]);
+
+  const onMarkerAdd = useCallback((coordinates) => {
+    setMarkers([...markers, coordinates]);
+  }, [markers]);
 
   return (
     <div className={styles.orderFormWrapper}>
@@ -141,13 +215,21 @@ function OrderForm() {
                 onChange={(e) => onChange(e.target.value) && setRadio(e.target.value)}
               >
                 <Radio value="no" className={styles.formRad}>Самовывоз</Radio>
-                <Radio value="yes" className={styles.formRad}>Доставка до квартиры</Radio>
+                <Radio value="yes" className={styles.formRad}>Доставка до квартиры - 500€</Radio>
               </Radio.Group>
             )}
           />
           {radio === 'yes' ? (
             <Controller
-              render={({ field }) => <Input className={styles.inputs} {...field} placeholder="Введите адрес доставки или выберите точку на карте" />}
+              render={({ field }) => (
+                <div>
+                  <Input
+                    {...field}
+                    className={styles.input}
+                    placeholder="Введите адрес доставки (можно воспользоваться поиском на карте)"
+                  />
+                </div>
+              )}
               name="address"
               control={control}
               defaultValue=""
@@ -201,16 +283,38 @@ function OrderForm() {
           <div className={styles.formButtonContainer}>
             <div>
               <Text className={styles.formPrice}>Сумма: </Text>
-              <Text className={styles.formPrice}>рублей</Text>
+              <Text className={styles.formPrice}>
+                {totalPrice}
+                {' '}
+                €
+              </Text>
             </div>
             <button className={styles.formButton} type="submit">Оформить заказ</button>
           </div>
+          <Modal
+            centered
+            open={isModalOpen}
+            onOk={handleOk}
+            onCancel={handleCancel}
+          >
+            <p>Спасибо за заказ!</p>
+          </Modal>
 
         </form>
       </div>
       <div className={styles.formItemsWrapper}>
         <div className={styles.formWrapper}>
-          {isLoaded ? <Map /> : <h2>Loading...</h2>}
+          <PlacesAutocomplete isLoaded={isLoaded} onSelect={onPlaceSelect} />
+          <button type="button" onClick={toggleMode}>Выбор места на карте</button>
+          {isLoaded
+            ? (
+              <Map
+                center={center}
+                mode={mode}
+                markers={markers}
+                onMarkerAdd={onMarkerAdd}
+              />
+            ) : <h2>Loading...</h2>}
         </div>
       </div>
     </div>

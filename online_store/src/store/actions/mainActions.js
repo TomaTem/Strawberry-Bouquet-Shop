@@ -27,13 +27,17 @@ export const removeFromCartAC = (sku) => ({
 export const deleteCartAC = (data) => ({
   type: mainTypes.DELETE_CART,
   payload: data,
-})
+});
 
 export const countCartAC = (data) => ({
   type: mainTypes.COUNT_CART,
   payload: data,
-})
+});
 
+export const setFilterAC = (data) => ({
+  type: mainTypes.SET_FILTER,
+  payload: data,
+});
 export const getProductListThunk = () => (dispatch) => {
   fetch('https://strawberry.nmsc.pchapl.dev/product')
     .then((data) => data.json())

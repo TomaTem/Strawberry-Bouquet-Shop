@@ -31,7 +31,8 @@
   display: block;
 }
 
-.inputs {
+.inputs,
+.input {
   width: 100%;
   border: 0;
   border-radius: 0;
@@ -39,13 +40,15 @@
   height: 50px;
 }
 
-.inputs:focus {
+.inputs:focus,
+.input:focus {
   border-radius: 0;
   box-shadow: none;
   border-color: #FFC2C6;
 }
 
-.inputs:hover {
+.inputs:hover,
+.input:focus {
   border-radius: 0;
   box-shadow: none;
   border-color: #FFC2C6;

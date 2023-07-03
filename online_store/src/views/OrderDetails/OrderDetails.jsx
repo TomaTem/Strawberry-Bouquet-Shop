@@ -104,15 +104,15 @@ export default function OrderDetails() {
     },
   }];
 
-  const order = list.find(el => el.id === +id);
+  const order = list.find((el) => el.id === +id);
   console.log(order);
 
   const onChange = (currentSlide) => {
     console.log(currentSlide);
   };
 
-  function numberOfBouquets(order) {
-    const number = order.products.reduce((acc, el) => {
+  function numberOfBouquets(oneOrder) {
+    const number = oneOrder.products.reduce((acc, el) => {
       // eslint-disable-next-line no-param-reassign
       acc += el.count;
       return acc;
@@ -120,9 +120,9 @@ export default function OrderDetails() {
     return number;
   }
 
-  function photosOfBouquets(order) {
+  function photosOfBouquets(oneOrder) {
     const srcArr = [];
-    order.products.map((el) => {
+    oneOrder.products.map((el) => {
       srcArr.push(productList.find((product) => product.sku === +el.sku).photos[0]);
       return srcArr;
     });
@@ -141,79 +141,79 @@ export default function OrderDetails() {
         display: 'flex',
       }}
     >
-        <Card
-          title={(
-              <p className={styles.orderTitle}>
-                Заказ №
-                {' '}
-                {order.id}
-                {' '}
-                от
-                {' '}
-                {order.data.date}
-              </p>
+      <Card
+        title={(
+          <p className={styles.orderTitle}>
+            Заказ №
+            {' '}
+            {order.id}
+            {' '}
+            от
+            {' '}
+            {order.data.date}
+          </p>
         )}
-          key={order.id}
-          extra={(
-            <Tooltip title="Удалить заказ">
-              <Button shape="circle" icon={<CloseOutlined />} id={styles.orderBtnDelete} />
-            </Tooltip>
+        key={order.id}
+        extra={(
+          <Tooltip title="Удалить заказ">
+            <Button shape="circle" icon={<CloseOutlined />} id={styles.orderBtnDelete} />
+          </Tooltip>
 )}
-          className={styles.orderCard}
-        >
-          <Row>
-            <Col span={9}>
-                  <Carousel afterChange={onChange}>
-                  {photosOfBouquets(order).map((src) => (
-              <div className={styles.smallImg} key={src}>
+        className={styles.orderCard}
+      >
+        <Row>
+          <Col span={9}>
+            <Carousel afterChange={onChange}>
+              {photosOfBouquets(order).map((src) => (
+                <div className={styles.smallImg} key={src}>
                   <img
-                      className={styles.smallImgItself}
-                      src={src}
-                      alt="Выбранный букет"
-                    />
-              </div>
-                ))}
-                    </Carousel>
-            </Col>
-            <Col span={15} className={styles.orderInfo}>
-              <p>
-                Заказчик:
-                {' '}
-                {order.data.name}
-              </p>
-              <p>
-                Тип доставки:
-                {' '}
-                {order.data.delivery}
-              </p>
-              <p>
-                Адрес доставки/самовывоза:
-                {' '}
-                {order.data.address}
-              </p>
-            </Col>
-          </Row>
-          <Row>
-            <Col span={24} className={styles.orderPrices}>
-              <Divider className={styles.orderDivider} />
-              <p>
-                Количество букетов:
-                {' '}
-                {numberOfBouquets(order)}
-                {' '}
-                шт
-              </p>
-              <p>
-                {' '}
-                Общая сумма заказа:
-                {' '}
-                {order.price.total_price}
-                {' '}
-                руб.
-              </p>
-            </Col>
-          </Row>
-        </Card>
+                    className={styles.smallImgItself}
+                    src={src}
+                    alt="Выбранный букет"
+                  />
+                </div>
+              ))}
+            </Carousel>
+          </Col>
+          <Col span={15} className={styles.orderInfo}>
+            <p>
+              Заказчик:
+              {' '}
+              {order.data.name}
+            </p>
+            <p>
+              Тип доставки:
+              {' '}
+              {order.data.delivery}
+            </p>
+            <p>
+              Адрес доставки/самовывоза:
+              {' '}
+              {order.data.address}
+            </p>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={24} className={styles.orderPrices}>
+            <Divider className={styles.orderDivider} />
+            <p>
+              Количество букетов:
+              {' '}
+              {numberOfBouquets(order)}
+              {' '}
+              шт
+            </p>
+            <p>
+              {' '}
+              Общая сумма заказа:
+              {' '}
+              {order.price.total_price}
+              {' '}
+              руб.
+            </p>
+          </Col>
+        </Row>
+      </Card>
     </Space>
   );
 }

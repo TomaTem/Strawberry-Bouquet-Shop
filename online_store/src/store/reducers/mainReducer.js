@@ -8,9 +8,9 @@ const initialState = {
   filters: {
     minPrice: 0,
     maxPrice: Infinity,
-    size: null,
-    type: null,
-    chocolate: null,
+    size: [],
+    type: [],
+    chocolate: [],
   },
 };
 
@@ -77,6 +77,11 @@ function mainReducer(state = initialState, action = {}) {
         .reverse()
         .filter((item) => item.quantity > 0);
       return { ...state, cart: updatedCart, totalCart: cartSum(updatedCart) };
+    }
+    case mainTypes.SET_FILTER: {
+      const { filters } = state;
+      const newFilters = action.payload;
+      return { ...state, filters: { ...filters, ...newFilters } };
     }
     case mainTypes.DELETE_CART: {
       const { cart } = state;
