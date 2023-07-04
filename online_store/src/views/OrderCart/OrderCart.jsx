@@ -11,14 +11,14 @@ import {
 } from '../../store/actions/mainActions';
 
 function OrderCart({ product }) {
-  const { berries, topper, id, quantity, itemsprice } = product;
+  const { id, quantity, itemsprice } = product;
   const dispatch = useDispatch();
   const increase = (orderItem) => {
     orderItem = {
       id: 0,
       sku: product.sku,
-      berries: berries,
-      topper: topper,
+      berries: product.berries,
+      topper: product.topper,
       quantity: 1,
       price: product.price,
       itemsprice: product.price,
@@ -30,8 +30,8 @@ function OrderCart({ product }) {
     orderItem = {
       id: 0,
       sku: product.sku,
-      berries: berries,
-      topper: topper,
+      berries: product.berries,
+      topper: product.topper,
       quantity: 1,
       price: product.price,
       itemsprice: product.price,
@@ -99,8 +99,8 @@ function OrderCart({ product }) {
             </Link>
             <p className={styles.addings}>
               <p>{productData.description.ingredients}</p>
-              <p>{getBerryName(berries)}</p>
-              <p>{getTopperName(topper)}</p>
+              <p>{getBerryName(product.berries)}</p>
+              <p>{getTopperName(product.topper)}</p>
             </p>
           </div>
         </div>

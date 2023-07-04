@@ -10,4 +10,3 @@ const mainTypes = {
 };
 
 export default mainTypes;
-
