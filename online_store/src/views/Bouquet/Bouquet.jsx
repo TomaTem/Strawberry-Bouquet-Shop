@@ -43,16 +43,6 @@ export default function Bouquet() {
     } else if (selectedBerries === 'mix') {
       berriesPrice = 400;
     }
-
-    // orderItem = {
-    //   id: 0,
-    //   sku: product.sku,
-    //   berries: selectedBerries,
-    //   topper: selectedTopper,
-    //   quantity: 1,
-    //   price: product.price + topperPrice + berriesPrice,
-    //   itemsprice: product.price + topperPrice + berriesPrice,
-    // };
     const updatedOrderItem = {
       id: 0,
       sku: product.sku,
