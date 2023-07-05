@@ -21,8 +21,6 @@ import styles from './order-form.module.scss';
 import PlacesAutocomplete from './Auto';
 import { Map, MODES } from './Map';
 
-import useProductList from '../../hooks/useProductList';
-
 const { Text, Paragraph } = Typography;
 
 const API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
@@ -43,9 +41,6 @@ function OrderForm() {
   });
 
   const dispatch = useDispatch();
-
-  const product = useProductList();
-  console.log(product[0]);
 
   const onPlaceSelect = useCallback(
     (coordinates) => {
@@ -82,7 +77,7 @@ function OrderForm() {
 
   const totalPrice = totalCart + deliveryPrice;
 
-  const onSubmit = async (data) => {
+  const onSubmit = (data) => {
     const order = cart.reduce((acc, el) => {
       const obj = {
         sku: String(el.sku),
@@ -109,15 +104,16 @@ function OrderForm() {
 
     console.log(`Данные на сервер: ${JSON.stringify(orderData)}`);
 
-    const res = await fetch('https://strawberry.nmsc.pchapl.dev/order', {
-      method: 'POST',
-      body: JSON.stringify(orderData),
-    });
-    if (res.status === 200) {
-      // setIsModalOpen(true);
-    } else {
-      console.log('Error');
-    }
+    // const res = await fetch('https://strawberry.nmsc.pchapl.dev/order', {
+    //   method: 'POST',
+    //   body: JSON.stringify(orderData),
+    // });
+    // if (res.status === 200) {
+    //   setIsModalOpen(true);
+    //   reset();
+    // } else {
+    //   console.log('Error');
+    // }
     setIsModalOpen(true);
     reset();
   };
@@ -317,13 +313,16 @@ function OrderForm() {
           <button type="button" onClick={toggleMode}>Выбор места на карте</button>
           {isLoaded
             ? (
-              <Map
-                center={center}
-                mode={mode}
-                markers={markers}
-                onMarkerAdd={onMarkerAdd}
-              />
-            ) : <h2>Loading...</h2>}
+              <div className={styles.map}>
+                <Map
+                  center={center}
+                  mode={mode}
+                  markers={markers}
+                  onMarkerAdd={onMarkerAdd}
+                />
+              </div>
+
+            ) : <div className={styles.map}><h2>Loading...</h2></div>}
         </div>
       </div>
     </div>

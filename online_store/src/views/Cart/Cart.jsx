@@ -7,12 +7,18 @@ import styles from './cart.module.scss';
 function Cart() {
   const { cart } = useSelector((store) => store.mainStore);
   if (!cart.length) {
-    return <div>Корзина пуста</div>;
+    return (
+      <div className={styles.wrapperCart}>
+        <div className={styles.containerCart}>Корзина пуста</div>
+      </div>
+    );
   }
   return (
-    <div className={styles.wrapper}>
-      <SelectedBouquets />
-      <OrderForm />
+    <div className={styles.wrapperCart}>
+      <div className={styles.containerCart}>
+        <SelectedBouquets />
+        <OrderForm />
+      </div>
     </div>
   );
 }
