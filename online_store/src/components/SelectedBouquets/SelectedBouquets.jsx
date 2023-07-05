@@ -7,12 +7,10 @@ import OrderCart from '../../views/OrderCart/OrderCart';
 
 function SelectedBouquets() {
   const { cart } = useSelector((store) => store.mainStore);
-  const { totalCart} = useSelector((store) => store.mainStore);
-  console.log(totalCart)
- 
-  const products = cart.map(product =>{
-   return <OrderCart product = {product} key = {product.id} />
-  })
+  const { totalCart } = useSelector((store) => store.mainStore);
+  console.log(totalCart);
+
+  const products = cart.map((product) => <OrderCart product={product} key={product.id} />);
 
   // const [total, setTotal] = useState(
   //   cart.reduce((prev, curr) => {
@@ -23,12 +21,12 @@ function SelectedBouquets() {
 
   return (
     <>
-     <h1 className={styles.cart__header}>Корзина</h1>
-          <div className={styles.table__header}>
-            <div>Наименование</div>
-            <div>Количество</div>
-            <div>Стоимость</div>
-          </div>
+      <h1 className={styles.cart__header}>Корзина</h1>
+      <div className={styles.table__header}>
+        <div>Наименование</div>
+        <div>Количество</div>
+        <div>Стоимость</div>
+      </div>
       <div className={styles.bouquetWrapper}>
         {products}
       </div>
@@ -36,11 +34,13 @@ function SelectedBouquets() {
         <div className={styles.sum}>Сумма заказa </div>
         <div className={styles.summary}>
           {totalCart}
-           рублей</div>
+          рублей
+
+        </div>
       </div>
-      
+
     </>
-  )
+  );
 }
 
 export default SelectedBouquets;
