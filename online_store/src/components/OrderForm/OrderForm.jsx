@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable camelcase */
 import React, { useState, useCallback } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useForm, Controller } from 'react-hook-form';
 
 import {
@@ -15,6 +15,7 @@ import {
 } from 'antd';
 
 import { useJsApiLoader } from '@react-google-maps/api';
+import { emptyTheCartAC } from '../../store/actions/mainActions';
 import styles from './order-form.module.scss';
 
 import PlacesAutocomplete from './Auto';
@@ -41,6 +42,8 @@ function OrderForm() {
     googleMapsApiKey: API_KEY,
   });
 
+  const dispatch = useDispatch();
+
   const product = useProductList();
   console.log(product[0]);
 
@@ -56,9 +59,13 @@ function OrderForm() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleOk = () => {
     setIsModalOpen(false);
+    setRadio('no');
+    dispatch(emptyTheCartAC());
   };
   const handleCancel = () => {
     setIsModalOpen(false);
+    setRadio('no');
+    dispatch(emptyTheCartAC());
   };
 
   const { control, handleSubmit, reset } = useForm();
@@ -75,7 +82,7 @@ function OrderForm() {
 
   const totalPrice = totalCart + deliveryPrice;
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     const order = cart.reduce((acc, el) => {
       const obj = {
         sku: String(el.sku),
@@ -102,18 +109,17 @@ function OrderForm() {
 
     console.log(`Данные на сервер: ${JSON.stringify(orderData)}`);
 
-    // const res = await fetch('https://strawberry.nmsc.pchapl.dev/order', {
-    //   method: 'POST',
-    //   body: JSON.stringify(orderData),
-    // });
-    // if (res.status === 200) {
-    //   // setIsModalOpen(true);
-    // } else {
-    //   console.log('Error');
-    // }
+    const res = await fetch('https://strawberry.nmsc.pchapl.dev/order', {
+      method: 'POST',
+      body: JSON.stringify(orderData),
+    });
+    if (res.status === 200) {
+      // setIsModalOpen(true);
+    } else {
+      console.log('Error');
+    }
     setIsModalOpen(true);
     reset();
-    setRadio('no');
   };
 
   const toggleMode = useCallback(() => {
@@ -149,6 +155,7 @@ function OrderForm() {
             render={({ field }) => <Input className={styles.inputs} {...field} placeholder="Телефон +357xxxxxxxxх" />}
             name="phone"
             type="phone"
+            rules={{ required: true }}
             control={control}
             defaultValue=""
           />
@@ -169,8 +176,9 @@ function OrderForm() {
                 className={styles.inputs}
               />
             )}
-            name="date"
+            name="delivery_date"
             type="date"
+            rules={{ required: true }}
             control={control}
             defaultValue=""
           />
@@ -231,6 +239,7 @@ function OrderForm() {
                 </div>
               )}
               name="address"
+              rules={{ required: true }}
               control={control}
               defaultValue=""
             />
@@ -256,13 +265,13 @@ function OrderForm() {
           </Text>
           <Controller
             render={({ field }) => <Input className={styles.inputs} {...field} placeholder="Имя получателя" />}
-            name="recipient-name"
+            name="recipient_name"
             control={control}
             defaultValue=""
           />
           <Controller
             render={({ field }) => <Input className={styles.inputs} {...field} placeholder="Телефон получателя +357xxxxxxxxх" />}
-            name="recipient-phone"
+            name="recipient_phone"
             type="phone"
             control={control}
             defaultValue=""

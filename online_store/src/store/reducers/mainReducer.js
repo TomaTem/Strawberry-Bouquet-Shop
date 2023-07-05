@@ -4,6 +4,8 @@ const initialState = {
   cart: [],
   productList: [],
   productListRequested: false,
+  orderList: [],
+  orderListRequested: false,
   totalCart: 0,
   filters: {
     minPrice: 0,
@@ -25,6 +27,12 @@ function mainReducer(state = initialState, action = {}) {
     }
     case mainTypes.PRODUCT_LIST_REQUESTED: {
       return { ...state, productListRequested: action.payload };
+    }
+    case mainTypes.WRITE_ORDER_LIST: {
+      return { ...state, orderList: action.payload };
+    }
+    case mainTypes.ORDER_LIST_REQUESTED: {
+      return { ...state, orderListRequested: action.payload };
     }
     case mainTypes.ADD_TO_CART: {
       const { cart } = state;
@@ -54,6 +62,22 @@ function mainReducer(state = initialState, action = {}) {
       }
 
       return { ...state, cart: updatedCart, totalCart: cartSum(updatedCart) };
+    }
+    case mainTypes.EMPTY_THE_CART: {
+      return {
+        ...state,
+        cart: [],
+        productList: [],
+        productListRequested: false,
+        totalCart: 0,
+        filters: {
+          minPrice: 0,
+          maxPrice: Infinity,
+          size: [],
+          type: [],
+          chocolate: [],
+        },
+      };
     }
     case mainTypes.REMOVE_FROM_CART: {
       const { cart } = state;
