@@ -6,7 +6,7 @@ import styles from './orderCart.module.scss';
 import useProductList from '../../hooks/useProductList';
 import {
   addToCartAC,
-  removeFromCartAC,
+  decreaseCartAC,
   deleteCartAC,
 } from '../../store/actions/mainActions';
 
@@ -26,17 +26,17 @@ function OrderCart({ product }) {
     dispatch(addToCartAC(orderItem));
   };
 
-  const decrease = (orderItem) => {
-    orderItem = {
-      id: 0,
-      sku: product.sku,
-      berries: product.berries,
-      topper: product.topper,
-      quantity: 1,
-      price: product.price,
-      itemsprice: product.price,
-    };
-    dispatch(removeFromCartAC(orderItem.sku));
+  const decrease = () => {
+    // orderItem = {
+    //   id: 0,
+    //   sku: product.sku,
+    //   berries: product.berries,
+    //   topper: product.topper,
+    //   quantity: 1,
+    //   price: product.price,
+    //   itemsprice: product.price,
+    // };
+    dispatch(decreaseCartAC(product.id));
   };
 
   function deleteCart(orderItem) {

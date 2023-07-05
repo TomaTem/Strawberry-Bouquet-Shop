@@ -10,6 +10,7 @@ const mainTypes = {
   DELETE_CART: 'DELETE_CART',
   SET_FILTER: 'SET_FILTER',
   EMPTY_THE_CART: 'EMPTY_THE_CART',
+  DECREASE_CART: 'DECREASE_CART',
 };
 
 export default mainTypes;

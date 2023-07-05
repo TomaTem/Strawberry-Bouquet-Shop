@@ -83,8 +83,8 @@ function mainReducer(state = initialState, action = {}) {
       const { cart } = state;
       const skuFound = action.payload;
       let itemFound = false;
-      const updatedCart = cart
-        .toReversed()
+      const updatedCart = [...cart]
+        .reverse()
         .map((item) => {
           if (!itemFound && item.sku === skuFound) {
             itemFound = true;
@@ -111,6 +111,29 @@ function mainReducer(state = initialState, action = {}) {
       const { cart } = state;
       const id = action.payload;
       const updatedCart = cart.filter((el) => el.id !== id);
+      return { ...state, cart: updatedCart, totalCart: cartSum(updatedCart) };
+    }
+    case mainTypes.DECREASE_CART: {
+      const { cart } = state;
+      const id = action.payload;
+      let itemFound = false;
+      const updatedCart = [...cart]
+        .reverse()
+        .map((item) => {
+          if (!itemFound && item.id === id) {
+            itemFound = true;
+            if (item.quantity > 0) {
+              return {
+                ...item,
+                quantity: item.quantity - 1,
+                itemsprice: item.price * (item.quantity - 1),
+              };
+            }
+          }
+          return item;
+        })
+        .reverse()
+        .filter((item) => item.quantity > 0);
       return { ...state, cart: updatedCart, totalCart: cartSum(updatedCart) };
     }
     default: {
