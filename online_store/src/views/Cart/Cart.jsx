@@ -7,7 +7,7 @@ import styles from './cart.module.scss';
 function Cart() {
   const { cart } = useSelector((store) => store.mainStore);
   if (!cart.length) {
-    return <div>Корзина пуста</div>;
+    return <div className={styles.emptyCart}>Корзина пуста</div>;
   }
   return (
     <div className={styles.wrapper}>

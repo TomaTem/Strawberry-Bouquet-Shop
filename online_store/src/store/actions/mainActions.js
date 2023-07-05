@@ -18,10 +18,6 @@ export const writeOrderListAC = (data) => ({
   type: mainTypes.WRITE_ORDER_LIST,
   payload: data,
 });
-export const orderListRequestedAC = () => ({
-  type: mainTypes.ORDER_LIST_REQUESTED,
-  payload: true,
-});
 
 export const addToCartAC = (data) => ({
   type: mainTypes.ADD_TO_CART,
@@ -74,9 +70,6 @@ export const getOrderListThunk = () => (dispatch) => {
         writeOrderListAC(result),
       );
     });
-  dispatch(
-    orderListRequestedAC(),
-  );
 };
 
 export function getDate(datestr) {
@@ -95,3 +88,10 @@ export function countNumberOfBouquets(order) {
   }, 0);
   return number;
 }
+
+export const deleteOrder = (id) => async (dispatch) => {
+  await fetch(`https://strawberry.nmsc.pchapl.dev/order/${id}`, {
+    method: 'DELETE',
+  });
+  dispatch(getOrderListThunk());
+};

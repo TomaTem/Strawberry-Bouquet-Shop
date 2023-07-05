@@ -3,14 +3,12 @@ import { useEffect } from 'react';
 import { getOrderListThunk } from '../store/actions/mainActions';
 
 const useOrderList = (id) => {
-  const { orderListRequested, orderList } = useSelector((store) => store.mainStore);
+  const { orderList } = useSelector((store) => store.mainStore);
   const dispatch = useDispatch();
   useEffect(() => {
-    if (!orderListRequested) {
-      dispatch(
-        getOrderListThunk(),
-      );
-    }
+    dispatch(
+      getOrderListThunk(),
+    );
   }, []);
   return id ? orderList.find((order) => order.id === +id) : orderList;
 };

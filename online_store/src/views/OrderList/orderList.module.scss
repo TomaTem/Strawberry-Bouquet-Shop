@@ -1,6 +1,20 @@
-.container {
+.container, .info {
     margin: 3rem;
     align-items: center;
+}
+.loadContainer {
+    display: flex;
+    height: 47vh;
+    align-items: center;
+    justify-content: center;
+}
+#loading {
+    font-size: 2rem;
+    color: #004f2b;
+}
+.info {
+    text-align: center;
+    font-size: large;
 }
 .orderCard {
     width: 70vw;

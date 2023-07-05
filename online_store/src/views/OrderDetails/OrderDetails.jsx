@@ -3,16 +3,18 @@ import {
   Card, Space, Button, Tooltip, Col, Row, Divider, Carousel,
 } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
+import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import useProductList from '../../hooks/useProductList';
 import useOrderList from '../../hooks/useOrderList';
-import { getDate, countNumberOfBouquets } from '../../store/actions/mainActions';
+import { deleteOrder, getDate, countNumberOfBouquets } from '../../store/actions/mainActions';
 import styles from './orderDetails.module.scss';
 
 export default function OrderDetails() {
   const { id } = useParams();
   const productList = useProductList();
   const order = useOrderList(id);
+  const dispatch = useDispatch();
   console.log(order);
 
   const onChange = (currentSlide) => {
@@ -51,9 +53,16 @@ export default function OrderDetails() {
         )}
         key={order.id}
         extra={(
-          <Tooltip title="Удалить заказ">
-            <Button shape="circle" icon={<CloseOutlined />} id={styles.orderBtnDelete} />
-          </Tooltip>
+          <>
+            <Tooltip title="Редактировать заказ">
+              <Button shape="circle" icon={<CloseOutlined />} id={styles.orderBtnDelete} />
+            </Tooltip>
+            <Tooltip title="Удалить заказ">
+              <Button shape="circle" icon={<CloseOutlined />} id={styles.orderBtnDelete} onClick={() => dispatch(deleteOrder(order.id))} />
+            </Tooltip>
+
+          </>
+
 )}
         className={styles.orderCard}
       >
@@ -103,7 +112,7 @@ export default function OrderDetails() {
               {' '}
               Общая сумма заказа:
               {' '}
-              {/* {order.price.total_price} */}
+              {order.price.total_price}
               {' '}
               руб.
             </p>

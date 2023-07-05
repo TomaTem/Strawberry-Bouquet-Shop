@@ -1,18 +1,20 @@
 import React from 'react';
 import {
-  Card, Space, Button, Tooltip, Col, Row, Divider,
+  Card, Space, Button, Tooltip, Col, Row, Divider, Spin,
 } from 'antd';
 import { Link } from 'react-router-dom';
-import { CloseOutlined } from '@ant-design/icons';
+import { LoadingOutlined, CloseOutlined } from '@ant-design/icons';
+import { useDispatch } from 'react-redux';
+import { deleteOrder, getDate, countNumberOfBouquets } from '../../store/actions/mainActions';
 import useProductList from '../../hooks/useProductList';
 import useOrderList from '../../hooks/useOrderList';
-import { getDate, countNumberOfBouquets } from '../../store/actions/mainActions';
 import styles from './orderList.module.scss';
 
 export default function OrderList() {
   const productList = useProductList();
   const orderList = useOrderList();
   console.log(orderList);
+  const dispatch = useDispatch();
 
   function photosOfBouquets(orderInfo) {
     const srcArr = [];
@@ -23,8 +25,20 @@ export default function OrderList() {
     return srcArr;
   }
 
-  if (!orderList.length || !productList.length) {
-    return <div>Loading...</div>;
+  if (!productList.length) {
+    return (
+      <div className={styles.loadContainer}>
+        <Spin indicator={(
+          <LoadingOutlined
+            id={styles.loading}
+            spin
+          />
+        )}
+        />
+      </div>
+    );
+  } if (!orderList.length) {
+    return <div className={styles.info}>Нет оформленных заказов</div>;
   }
   return (
     <Space
@@ -50,7 +64,7 @@ export default function OrderList() {
           key={order.id}
           extra={(
             <Tooltip title="Удалить заказ">
-              <Button shape="circle" icon={<CloseOutlined />} id={styles.orderBtnDelete} />
+              <Button shape="circle" icon={<CloseOutlined />} id={styles.orderBtnDelete} onClick={() => dispatch(deleteOrder(order.id))} />
             </Tooltip>
 )}
           className={styles.orderCard}
@@ -103,7 +117,7 @@ export default function OrderList() {
                 {' '}
                 Общая сумма заказа:
                 {' '}
-                {/* {order.price.total_price} */}
+                {order.price.total_price}
                 {' '}
                 руб.
               </p>

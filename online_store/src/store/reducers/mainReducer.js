@@ -5,7 +5,6 @@ const initialState = {
   productList: [],
   productListRequested: false,
   orderList: [],
-  orderListRequested: false,
   totalCart: 0,
   filters: {
     minPrice: 0,
@@ -30,9 +29,6 @@ function mainReducer(state = initialState, action = {}) {
     }
     case mainTypes.WRITE_ORDER_LIST: {
       return { ...state, orderList: action.payload };
-    }
-    case mainTypes.ORDER_LIST_REQUESTED: {
-      return { ...state, orderListRequested: action.payload };
     }
     case mainTypes.ADD_TO_CART: {
       const { cart } = state;
