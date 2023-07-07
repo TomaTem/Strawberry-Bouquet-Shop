@@ -1,7 +1,9 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { CloseOutlined, UpOutlined, DownOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
+import ButtonGroup from 'antd/es/button/button-group';
+import { CloseOutlined } from '@ant-design/icons';
 import styles from './orderCart.module.scss';
 import useProductList from '../../hooks/useProductList';
 import {
@@ -27,15 +29,6 @@ function OrderCart({ product }) {
   };
 
   const decrease = () => {
-    // orderItem = {
-    //   id: 0,
-    //   sku: product.sku,
-    //   berries: product.berries,
-    //   topper: product.topper,
-    //   quantity: 1,
-    //   price: product.price,
-    //   itemsprice: product.price,
-    // };
     dispatch(decreaseCartAC(product.id));
   };
 
@@ -106,22 +99,26 @@ function OrderCart({ product }) {
         </div>
       </div>
       <div className={styles.quantity}>
-        <div className={styles.count}>{quantity}</div>
         <div className={styles.control}>
-          <button
-            type="button"
-            className={styles.button__quantity}
-            onClick={() => increase()}
-          >
-            <UpOutlined />
-          </button>
-          <button
-            type="button"
-            className={styles.button__quantity}
-            onClick={() => decrease()}
-          >
-            <DownOutlined />
-          </button>
+          <ButtonGroup id={styles.btn_group}>
+            <Button
+              type="primary"
+              onClick={() => decrease()}
+              id={styles.button__quantity}
+            >
+              -
+            </Button>
+            <Button disabled id={styles.count}>
+              {quantity}
+            </Button>
+            <Button
+              type="primary"
+              onClick={() => increase()}
+              id={styles.button__quantity}
+            >
+              +
+            </Button>
+          </ButtonGroup>
         </div>
       </div>
       <div className={styles.price}>{itemsprice}</div>
