@@ -27,7 +27,7 @@ import { useJsApiLoader } from '@react-google-maps/api';
 import { emptyTheCartAC } from '../../store/actions/mainActions';
 import styles from './order-form.module.scss';
 
-import { Map, MODES } from './Map';
+import { Map, MODES } from '../../views/Map/Map';
 
 const { Text, Paragraph } = Typography;
 
