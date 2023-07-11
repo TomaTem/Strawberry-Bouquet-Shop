@@ -162,7 +162,7 @@ function OrderForm() {
 
   const totalPrice = totalCart + deliveryPrice;
 
-  const onSubmit = (data_form) => {
+  const onSubmit = async (data_form) => {
     const order = cart.reduce((acc, el) => {
       const obj = {
         sku: String(el.sku),
@@ -192,18 +192,16 @@ function OrderForm() {
 
     console.log(`Данные на сервер: ${JSON.stringify(orderData)}`);
 
-    // const res = await fetch('https://strawberry.nmsc.pchapl.dev/order', {
-    //   method: 'POST',
-    //   body: JSON.stringify(orderData),
-    // });
-    // if (res.status === 200) {
-    //   setIsModalOpen(true);
-    //   reset();
-    // } else {
-    //   console.log('Error');
-    // }
-    setIsModalOpen(true);
-    reset();
+    const res = await fetch('https://strawberry.nmsc.pchapl.dev/order', {
+      method: 'POST',
+      body: JSON.stringify(orderData),
+    });
+    if (res.status === 200) {
+      setIsModalOpen(true);
+      reset();
+    } else {
+      console.log('Error');
+    }
   };
 
   const deliveryNoFunction = () => {
