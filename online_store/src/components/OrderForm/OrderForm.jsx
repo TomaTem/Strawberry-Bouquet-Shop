@@ -38,8 +38,6 @@ const defaultCenter = {
   lng: 33.09065538465354,
 };
 
-// const patternPhone = /^(\d)$/;
-
 function OrderForm() {
   const [center, setCenter] = useState(defaultCenter);
   const [mode, setMode] = useState(MODES.MOVE);
@@ -84,7 +82,6 @@ function OrderForm() {
 
     getGeocode({ address: description }).then((results) => {
       const { lat, lng } = getLatLng(results[0]);
-      console.log('📍 Coordinates: ', { lat, lng });
       onPlaceSelect({ lat, lng });
     });
   };
@@ -142,13 +139,10 @@ function OrderForm() {
       default:
         setMode(MODES.MOVE);
     }
-    console.log(mode);
   }, [mode]);
 
   const onMarkerAdd = useCallback((coordinates) => {
     setMarkers([...markers, coordinates]);
-    console.log(coordinates);
-
     setValue(`Координаты: ${coordinates.lat}, ${coordinates.lng}`);
   }, [markers]);
 
@@ -168,7 +162,7 @@ function OrderForm() {
 
   const totalPrice = totalCart + deliveryPrice;
 
-  const onSubmit = (dataForm) => {
+  const onSubmit = (data_form) => {
     const order = cart.reduce((acc, el) => {
       const obj = {
         sku: String(el.sku),
@@ -183,12 +177,12 @@ function OrderForm() {
       return acc;
     }, []);
 
-    const dataFormAll = dataForm;
+    const dataFormAll = data_form;
     dataFormAll.address = value;
 
     const orderData = {
       products: order,
-      dataForm,
+      data_form,
       price: {
         order_price: totalCart,
         delivery_price: deliveryPrice,
@@ -222,14 +216,14 @@ function OrderForm() {
       <div className={styles.formItemsWrapper}>
         <form className={styles.formWrapper} onSubmit={handleSubmit(onSubmit)}>
           <Controller
-            render={({ field }) => <Input className={styles.inputs} {...field} placeholder="Ваше имя" />}
+            render={({ field }) => <Input className={styles.inputs} {...field} placeholder="* Ваше имя" />}
             name="name"
             rules={{ required: true }}
             control={control}
             defaultValue=""
           />
           <Controller
-            render={({ field }) => <Input className={styles.inputs} {...field} placeholder="Телефон +357xxxxxxxx" />}
+            render={({ field }) => <Input className={styles.inputs} {...field} placeholder="* Телефон +357xxxxxxxx" pattern="^(\+357)(96|97|99)(\d{6})$" />}
             name="phone"
             type="tel"
             rules={{ required: true }}
@@ -249,7 +243,7 @@ function OrderForm() {
                 {...field}
                 onChange={(e) => field.onChange(e)}
                 selected={field.value}
-                placeholder="Выберите дату"
+                placeholder="* Выберите дату"
                 className={styles.inputs}
               />
             )}
@@ -313,7 +307,8 @@ function OrderForm() {
                   disabled={!ready}
                   className={styles.inputs}
                   onChange={handleInput}
-                  placeholder="Введите адрес или сделайте отметку на карте"
+                  placeholder="* Введите адрес или сделайте отметку на карте"
+                  required
                 />
                 {status === 'OK' && <ul className={styles.inputAuto}>{renderSuggestions()}</ul>}
               </div>
