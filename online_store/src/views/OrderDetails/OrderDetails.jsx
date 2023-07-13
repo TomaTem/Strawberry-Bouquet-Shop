@@ -2,7 +2,7 @@ import React from 'react';
 import {
   Card, Space, Button, Tooltip, Col, Row, Divider, Carousel,
 } from 'antd';
-import { CloseOutlined } from '@ant-design/icons';
+import { CloseOutlined, EditFilled } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import useProductList from '../../hooks/useProductList';
@@ -48,6 +48,8 @@ export default function OrderDetails() {
             Заказ №
             {' '}
             {order.id}
+            {' '}
+            от
             {getDate(order.created)}
           </p>
         )}
@@ -55,7 +57,7 @@ export default function OrderDetails() {
         extra={(
           <>
             <Tooltip title="Редактировать заказ">
-              <Button shape="circle" icon={<CloseOutlined />} id={styles.orderBtnDelete} />
+              <Button shape="circle" icon={<EditFilled />} id={styles.orderBtnEdit} />
             </Tooltip>
             <Tooltip title="Удалить заказ">
               <Button shape="circle" icon={<CloseOutlined />} id={styles.orderBtnDelete} onClick={() => dispatch(deleteOrder(order.id))} />
@@ -84,17 +86,22 @@ export default function OrderDetails() {
             <p>
               Заказчик:
               {' '}
-              {order.data.name}
+              {order.data_form.name}
+            </p>
+            <p>
+              Дата доставки:
+              {' '}
+              {getDate(order.data_form.delivery_date)}
             </p>
             <p>
               Тип доставки:
               {' '}
-              {order.data.delivery === 'no' ? 'самовывоз' : 'курьер'}
+              {order.data_form.delivery === 'no' ? 'самовывоз' : 'курьер'}
             </p>
             <p>
               Адрес доставки/самовывоза:
               {' '}
-              {order.data.delivery === 'no' ? 'Γεωρ. Α 87, Γερμασόγεια' : order.data.address}
+              {order.data_form.delivery === 'no' ? 'Γεωρ. Α 87, Γερμασόγεια' : order.data_form.address}
             </p>
           </Col>
         </Row>

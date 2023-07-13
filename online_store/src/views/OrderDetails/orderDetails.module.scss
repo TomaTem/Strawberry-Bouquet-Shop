@@ -11,11 +11,11 @@
     text-align: center;
     color: #bf4e55;
 }
-#orderBtnDelete {
+#orderBtnDelete, #orderBtnEdit {
     color: #004f2ba2;
     background-color: #004f2b46;
 }
-#orderBtnDelete:hover {
+#orderBtnDelete:hover, #orderBtnEdit:hover {
     color: #004f2b;
     border: #004f2b solid 1px;
 }

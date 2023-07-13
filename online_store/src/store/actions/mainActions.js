@@ -82,7 +82,7 @@ export function getDate(datestr) {
   if (date.isNaN || date.toLocaleDateString() === 'Invalid Date') {
     return '';
   }
-  return ` от ${date.toLocaleDateString()}`;
+  return ` ${date.toLocaleDateString()}`;
 }
 
 export function countNumberOfBouquets(order) {
