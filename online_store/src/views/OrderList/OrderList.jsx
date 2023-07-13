@@ -126,7 +126,7 @@ export default function OrderList() {
                 {' '}
                 {order.price.total_price}
                 {' '}
-                руб.
+                у.е.
               </p>
             </Col>
           </Row>

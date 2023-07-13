@@ -221,7 +221,7 @@ function OrderForm() {
             defaultValue=""
           />
           <Controller
-            render={({ field }) => <Input className={styles.inputs} {...field} placeholder="* Телефон +357xxxxxxxx" pattern="^(\+357)(96|97|99)(\d{6})$" />}
+            render={({ field }) => <Input className={styles.inputs} {...field} placeholder="* Телефон: +357**xxxxxx, где ** - код оператора 96/97/99" pattern="^(\+357)(96|97|99)(\d{6})$" />}
             name="phone"
             type="tel"
             rules={{ required: true }}
@@ -370,7 +370,7 @@ function OrderForm() {
               <Text className={styles.formPrice}>
                 {totalPrice}
                 {' '}
-                €
+                у.е.
               </Text>
             </div>
             <button className={styles.formButton} type="submit">Оформить заказ</button>

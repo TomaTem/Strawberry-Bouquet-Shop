@@ -93,7 +93,7 @@ export default function Bouquet() {
               <div>
                 {product.price}
                 {' '}
-                руб.
+                у.е.
               </div>
               <div className="add_berries">
                 <p>Украсить ягодами</p>

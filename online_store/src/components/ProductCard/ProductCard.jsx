@@ -49,7 +49,7 @@ export default function ProductCard({ product }) {
           {product.description.ingredients}
         </Text>
         <div>
-          <Meta title={`${product.price} €`} />
+          <Meta title={`${product.price} у.е.`} />
           <Space
             style={{
               marginTop: '1rem',

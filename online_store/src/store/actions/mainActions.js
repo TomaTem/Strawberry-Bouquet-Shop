@@ -85,6 +85,41 @@ export function getDate(datestr) {
   return ` ${date.toLocaleDateString()}`;
 }
 
+export function getTopperName(topper) {
+  if (topper === 'none') {
+    topper = '—';
+  }
+  if (topper === 'happy bd') {
+    topper = 'Топпер "С Днем Рождения"';
+  }
+  if (topper === 'love you') {
+    topper = 'Топпер "Люблю"';
+  }
+  if (topper === '8march') {
+    topper = 'Топпер "С 8 Марта"';
+  }
+  if (topper === 'for mom') {
+    topper = 'Топпер "Маме"';
+  }
+  return topper;
+}
+
+export function getBerryName(berries) {
+  if (berries === 'none') {
+    berries = '—';
+  }
+  if (berries === 'blueberry') {
+    berries = 'Голубика';
+  }
+  if (berries === 'raspberry') {
+    berries = 'Малина';
+  }
+  if (berries === 'mix') {
+    berries = 'Голубика + малина';
+  }
+  return berries;
+}
+
 export function countNumberOfBouquets(order) {
   const number = order.products.reduce((acc, el) => {
     // eslint-disable-next-line no-param-reassign

@@ -23,7 +23,7 @@ function SelectedBouquets() {
         <div className={styles.summary}>
           {totalCart}
           {' '}
-          рублей
+          у.е.
         </div>
       </div>
     </>
