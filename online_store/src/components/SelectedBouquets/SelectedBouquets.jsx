@@ -7,9 +7,7 @@ function SelectedBouquets() {
   const { cart } = useSelector((store) => store.mainStore);
   const { totalCart } = useSelector((store) => store.mainStore);
 
-  const products = cart.map((product) => {
-    return <OrderCart product={product} key={product.id} />;
-  });
+  const products = cart.map((product) => <OrderCart product={product} key={product.id} />);
 
   return (
     <>
@@ -23,7 +21,9 @@ function SelectedBouquets() {
       <div className={styles.table__footer}>
         <div className={styles.sum}>Сумма заказa </div>
         <div className={styles.summary}>
-          {totalCart} рублей
+          {totalCart}
+          {' '}
+          рублей
         </div>
       </div>
     </>
