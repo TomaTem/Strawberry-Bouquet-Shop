@@ -1,8 +1,17 @@
+/* eslint-disable no-unused-expressions */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable camelcase */
-import React, { useState, useCallback } from 'react';
+
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+/* eslint-disable react/prop-types */
+import React, { useState, useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm, Controller } from 'react-hook-form';
+import usePlacesAutocomplete, {
+  getGeocode,
+  getLatLng,
+} from 'use-places-autocomplete';
+import useOnclickOutside from 'react-cool-onclickoutside';
 
 import {
   Input,
@@ -18,10 +27,7 @@ import { useJsApiLoader } from '@react-google-maps/api';
 import { emptyTheCartAC } from '../../store/actions/mainActions';
 import styles from './order-form.module.scss';
 
-import PlacesAutocomplete from './Auto';
-import { Map, MODES } from './Map';
-
-import useProductList from '../../hooks/useProductList';
+import { Map, MODES } from '../../views/Map/Map';
 
 const { Text, Paragraph } = Typography;
 
@@ -44,15 +50,65 @@ function OrderForm() {
 
   const dispatch = useDispatch();
 
-  const product = useProductList();
-  console.log(product[0]);
-
   const onPlaceSelect = useCallback(
     (coordinates) => {
       setCenter(coordinates);
     },
     [],
   );
+
+  const {
+    ready,
+    value,
+    init,
+    suggestions: { status, data },
+    setValue,
+    clearSuggestions,
+  } = usePlacesAutocomplete({
+    initOnMount: false,
+    debounce: 300,
+  });
+  const ref = useOnclickOutside(() => {
+    clearSuggestions();
+  });
+
+  const handleInput = (e) => {
+    setValue(e.target.value);
+  };
+
+  const handleSelect = ({ description }) => () => {
+    setValue(description, false);
+    clearSuggestions();
+
+    getGeocode({ address: description }).then((results) => {
+      const { lat, lng } = getLatLng(results[0]);
+      onPlaceSelect({ lat, lng });
+    });
+  };
+
+  const renderSuggestions = () => data.map((suggestion) => {
+    const {
+      place_id,
+      structured_formatting: { main_text, secondary_text },
+    } = suggestion;
+
+    return (
+      <li
+        key={place_id}
+        onClick={handleSelect(suggestion)}
+        onKeyDown={handleSelect(suggestion)}
+      >
+        <strong>{main_text}</strong>
+        <small>{secondary_text}</small>
+      </li>
+    );
+  });
+
+  useEffect(() => {
+    if (isLoaded) {
+      init();
+    }
+  }, [isLoaded, init]);
 
   const [radio, setRadio] = useState('no');
 
@@ -72,6 +128,30 @@ function OrderForm() {
   const { cart } = useSelector((store) => store.mainStore);
   const { totalCart } = useSelector((store) => store.mainStore);
 
+  const toggleMode = useCallback(() => {
+    switch (mode) {
+      case MODES.MOVE:
+        setMode(MODES.SET_MARKER);
+        break;
+      case MODES.SET_MARKER:
+        setMode(MODES.MOVE);
+        break;
+      default:
+        setMode(MODES.MOVE);
+    }
+  }, [mode]);
+
+  const onMarkerAdd = useCallback((coordinates) => {
+    setMarkers([...markers, coordinates]);
+    setValue(`Координаты: ${coordinates.lat}, ${coordinates.lng}`);
+  }, [markers]);
+
+  const clearMarker = useCallback(() => {
+    setMarkers([]);
+    setMode(MODES.MOVE);
+    setValue('');
+  }, []);
+
   let deliveryPrice = 0;
 
   if (radio === 'yes') {
@@ -82,7 +162,7 @@ function OrderForm() {
 
   const totalPrice = totalCart + deliveryPrice;
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data_form) => {
     const order = cart.reduce((acc, el) => {
       const obj = {
         sku: String(el.sku),
@@ -97,9 +177,12 @@ function OrderForm() {
       return acc;
     }, []);
 
+    const dataFormAll = data_form;
+    dataFormAll.address = value;
+
     const orderData = {
       products: order,
-      data,
+      data_form,
       price: {
         order_price: totalCart,
         delivery_price: deliveryPrice,
@@ -114,47 +197,33 @@ function OrderForm() {
       body: JSON.stringify(orderData),
     });
     if (res.status === 200) {
-      // setIsModalOpen(true);
+      setIsModalOpen(true);
+      reset();
     } else {
       console.log('Error');
     }
-    setIsModalOpen(true);
-    reset();
   };
 
-  const toggleMode = useCallback(() => {
-    switch (mode) {
-      case MODES.MOVE:
-        setMode(MODES.SET_MARKER);
-        break;
-      case MODES.SET_MARKER:
-        setMode(MODES.MOVE);
-        break;
-      default:
-        setMode(MODES.MOVE);
-    }
-    console.log(mode);
-  }, [mode]);
-
-  const onMarkerAdd = useCallback((coordinates) => {
-    setMarkers([...markers, coordinates]);
-  }, [markers]);
+  const deliveryNoFunction = () => {
+    setCenter(defaultCenter);
+    clearMarker();
+  };
 
   return (
     <div className={styles.orderFormWrapper}>
       <div className={styles.formItemsWrapper}>
         <form className={styles.formWrapper} onSubmit={handleSubmit(onSubmit)}>
           <Controller
-            render={({ field }) => <Input className={styles.inputs} {...field} placeholder="Ваше имя" />}
+            render={({ field }) => <Input className={styles.inputs} {...field} placeholder="* Ваше имя" />}
             name="name"
             rules={{ required: true }}
             control={control}
             defaultValue=""
           />
           <Controller
-            render={({ field }) => <Input className={styles.inputs} {...field} placeholder="Телефон +357xxxxxxxxх" />}
+            render={({ field }) => <Input className={styles.inputs} {...field} placeholder="* Телефон +357xxxxxxxx" pattern="^(\+357)(96|97|99)(\d{6})$" />}
             name="phone"
-            type="phone"
+            type="tel"
             rules={{ required: true }}
             control={control}
             defaultValue=""
@@ -172,7 +241,7 @@ function OrderForm() {
                 {...field}
                 onChange={(e) => field.onChange(e)}
                 selected={field.value}
-                placeholder="Выберите дату"
+                placeholder="* Выберите дату"
                 className={styles.inputs}
               />
             )}
@@ -216,46 +285,52 @@ function OrderForm() {
             control={control}
             name="delivery"
             defaultValue="no"
-            render={({ field: { value, onChange } }) => (
+            render={({ field: { onChange } }) => (
               <Radio.Group
-                value={value}
+                value={radio}
                 className={styles.formRadio}
                 onChange={(e) => onChange(e.target.value) && setRadio(e.target.value)}
               >
-                <Radio value="no" className={styles.formRad}>Самовывоз</Radio>
-                <Radio value="yes" className={styles.formRad}>Доставка до квартиры - 500€</Radio>
+                <Radio value="no" onChange={() => setValue('')} onClick={deliveryNoFunction} className={styles.formRad}>Самовывоз</Radio>
+                <Radio value="yes" className={styles.formRad}>Доставка до дома - 500€</Radio>
               </Radio.Group>
             )}
           />
           {radio === 'yes' ? (
-            <Controller
-              render={({ field }) => (
-                <div>
-                  <Input
-                    {...field}
-                    className={styles.input}
-                    placeholder="Введите адрес доставки (можно воспользоваться поиском на карте)"
-                  />
-                </div>
+            <div className={styles.inputAddress} ref={ref}>
+              <div className={styles.inputsAddress}>
+                <input
+                  name="address"
+                  value={value}
+                  disabled={!ready}
+                  className={styles.inputs}
+                  onChange={handleInput}
+                  placeholder="* Введите адрес или сделайте отметку на карте"
+                  required
+                />
+                {status === 'OK' && <ul className={styles.inputAuto}>{renderSuggestions()}</ul>}
+              </div>
+              {MODES.SET_MARKER && value === '' ? (
+                <button type="button" className={styles.formButtonMarker} onClick={toggleMode}>Поставить отметку</button>
+              ) : (
+                <button type="button" className={styles.formButtonMarker} onClick={clearMarker}>Удалить отметку</button>
               )}
-              name="address"
-              rules={{ required: true }}
-              control={control}
-              defaultValue=""
-            />
+            </div>
           ) : (
-            <Controller
-              render={() => (
-                <Paragraph
-                  className={styles.selfDelivery}
-                >
-                  Самовывоз по адресу: Γεωρ. Α 87, Γερμασόγεια
-                </Paragraph>
-              )}
-              name="address"
-              control={control}
-              defaultValue=""
-            />
+            <div>
+              <Controller
+                render={() => (
+                  <Paragraph
+                    className={styles.selfDelivery}
+                  >
+                    Самовывоз по адресу: Γεωρ. Α 87, Γερμασόγεια
+                  </Paragraph>
+                )}
+                name="address"
+                control={control}
+                defaultValue=""
+              />
+            </div>
           )}
           <Text
             className={styles.textContainer}
@@ -313,17 +388,18 @@ function OrderForm() {
       </div>
       <div className={styles.formItemsWrapper}>
         <div className={styles.formWrapper}>
-          <PlacesAutocomplete isLoaded={isLoaded} onSelect={onPlaceSelect} />
-          <button type="button" onClick={toggleMode}>Выбор места на карте</button>
           {isLoaded
             ? (
-              <Map
-                center={center}
-                mode={mode}
-                markers={markers}
-                onMarkerAdd={onMarkerAdd}
-              />
-            ) : <h2>Loading...</h2>}
+              <div className={styles.map}>
+                <Map
+                  center={center}
+                  mode={mode}
+                  markers={markers}
+                  onMarkerAdd={onMarkerAdd}
+                />
+              </div>
+
+            ) : <div className={styles.map}><h2>Loading...</h2></div>}
         </div>
       </div>
     </div>

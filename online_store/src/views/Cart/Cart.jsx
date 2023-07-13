@@ -10,9 +10,11 @@ function Cart() {
     return <div className={styles.emptyCart}>Корзина пуста</div>;
   }
   return (
-    <div className={styles.wrapper}>
-      <SelectedBouquets />
-      <OrderForm />
+    <div className={styles.wrapperCart}>
+      <div className={styles.containerCart}>
+        <SelectedBouquets />
+        <OrderForm />
+      </div>
     </div>
   );
 }
