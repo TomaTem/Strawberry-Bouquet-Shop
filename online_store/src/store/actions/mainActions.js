@@ -53,6 +53,11 @@ export const setFilterAC = (data) => ({
   payload: data,
 });
 
+export const decreaseCartAC = (data) => ({
+  type: mainTypes.DECREASE_CART,
+  payload: data,
+});
+
 export const getProductListThunk = () => (dispatch) => {
   fetch('https://strawberry.nmsc.pchapl.dev/product')
     .then((data) => data.json())

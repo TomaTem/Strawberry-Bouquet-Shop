@@ -21,29 +21,31 @@
     display: flex;
 }
 
-.button__quantity {
+#button__quantity {
     width: 3vw;
+    background-color: white;
+    font-weight: bolder;
+    color: #bf4e55;
+    border-color: rgb(199, 193, 193);
 }
 
-
-.count__input {
-    height: 6vh;
-    border-radius: 3px;
-    width: 7vw;
-    text-align: center;
+#button__quantity:hover {
+    border-color: #bf4e55;
 }
 
-.count__input::-webkit-inner-spin-button {
-    appearance: none;
+#btn_group {
+    border-color: #bf4e55;
 }
-.count__input::-webkit-outer-spin-button {
-    appearance: none;
+
+#count {
+    color: black;
+    background-color: white;
+    cursor: auto;
 }
 
 .control {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex-direction: row;
 }
 
 .addings {
@@ -57,4 +59,8 @@
 
 .link:hover {
     color: black;
+}
+
+.price {
+    padding-left: 2vw
 }
