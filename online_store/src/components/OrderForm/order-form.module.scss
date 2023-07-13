@@ -32,7 +32,8 @@
 }
 
 .inputs,
-.input {
+.input,
+.inputsAddress {
   width: 100%;
   border: 0;
   border-radius: 0;
@@ -56,14 +57,10 @@
 
 .inputSelect {
   width: 100%;
-  // border: 0;
-  // border-radius: 0;
-  // border-bottom: 1px solid #aaaaaa;
-  // height: 50px;
 }
 
 .selfDelivery {
-  margin: 28px 0 20px 0;
+  margin: 31px 0 20px 0;
 }
 
 .formButtonContainer {
@@ -87,6 +84,22 @@
   background-color: #BE1E2D;
 }
 
+.formButtonMarker {
+  width: 200px;
+  padding: 0.5rem 1rem;
+  margin-left: 10px;
+  border: none;
+  border-radius: 10px;
+  background-color: #BF4E55;
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: 0.5s;
+}
+
+.formButtonMarker:hover {
+  background-color: #BE1E2D;
+}
+
 .formTitle {
   font-size: 1.2rem;
   color: #BF4E55;
@@ -96,51 +109,51 @@
   font-weight: 600;
 }
 
-// .formRadio {
-//   background-color:#BE1E2D;
-// }
+.map {
+  width: 100%;
+  height: 100%;
+}
 
-// .formRad {
-// 	display: none;
-// }
-// .formRadio label {
-// 	display: inline-block;
-// 	cursor: pointer;
-// 	position: relative;
-// 	// padding-left: 25px;
-// 	margin-right: 0;
-// 	line-height: 18px;
-// 	user-select: none;
-// }
-// .formRadio label:before {
-// 	content: "";
-// 	display: inline-block;
-// 	width: 17px;
-// 	height: 18px;
-// 	position: absolute;
-// 	left: 0;
-//   z-index: 5;
-// 	bottom: 1px;
-//   border-radius: 3px;
-// 	background: #BE1E2D;
-// }
- 
-// /* Checked */
-// .formRadio input[type=radio]:checked + label:before {
-// 	background: #BE1E2D;
-// }
+.inputAddress {
+  display: flex;
+}
 
-// .formRadio input[type=radio]:checked {
-// 	background: #BE1E2D;
-// }
- 
-// /* Hover */
-// .formRadio label:hover {
-// 	filter: brightness(120%);
-// }
- 
-// /* Disabled */
-// .formRadio input[type=radio]:disabled + label:before {
-// 	filter: grayscale(100%);
-// }
+.inputsAddress {
+  position: relative;
+}
 
+.inputAuto {
+  position: absolute;
+  background-color: #FFFFFF;
+  border: #FFC2C6 1px solid;
+  z-index: 50;
+  padding: 3%;
+  margin: 0;
+  width: 94%;
+}
+
+li {
+  list-style-type: none;
+}
+
+li strong {
+  margin-right: 10px;
+}
+
+@media screen and (max-width: 1150px){
+  .orderFormWrapper {
+    flex-direction: column-reverse;
+    align-items: center;
+  }
+
+  .formItemsWrapper {
+    width: 80vw;
+    align-items: center;
+  }
+
+  .map {
+    width: 100%;
+    height: 50vh;
+  }
+
+}

@@ -38,5 +38,3 @@ export function Map({
     </GoogleMap>
   );
 }
-
-// export default Map;
