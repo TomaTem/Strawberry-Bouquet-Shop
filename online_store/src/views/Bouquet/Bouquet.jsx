@@ -1,26 +1,22 @@
 /* eslint-disable max-len */
 import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
+
 import {
   Select, Space, Carousel, Col, Row,
 } from 'antd';
-// import { useDispatch } from 'react-redux';
-import { useParams } from 'react-router-dom';
 import { HeartTwoTone, SmileTwoTone } from '@ant-design/icons';
+
 import useProductList from '../../hooks/useProductList';
-import styles from './bouquet.module.scss';
 import AddToCartBtn from '../../components/AddToCartBtn/AddToCartBtn';
 
-// import { addToCartAC } from '../../store/actions/mainActions';
+import styles from './bouquet.module.scss';
 
 export default function Bouquet() {
   const { id } = useParams();
   const product = useProductList(id);
-  console.log(product);
-  // const dispatch = useDispatch();
-
   const [selectedBerries, setSelectedBerries] = useState('none');
   const [selectedTopper, setSelectedTopper] = useState('none');
-  // const [size] = useState('large');
 
   const handleBerriesChange = (value) => {
     setSelectedBerries(value);
@@ -29,13 +25,7 @@ export default function Bouquet() {
     setSelectedTopper(value);
   };
   let orderItem = {
-    // id: 0,
-    // sku: product.sku,
-    // berries: 'none',
-    // topper: 'none',
     quantity: 1,
-    // price: product.price,
-    // itemsprice: product.price,
   };
 
   const handleAddToCart = () => {
@@ -53,8 +43,7 @@ export default function Bouquet() {
     } else if (selectedBerries === 'mix') {
       berriesPrice = 400;
     }
-
-    orderItem = {
+    const updatedOrderItem = {
       id: 0,
       sku: product.sku,
       berries: selectedBerries,
@@ -63,7 +52,8 @@ export default function Bouquet() {
       price: product.price + topperPrice + berriesPrice,
       itemsprice: product.price + topperPrice + berriesPrice,
     };
-    // dispatch(addToCartAC(orderItem));
+
+    orderItem = updatedOrderItem;
   };
 
   if (!product) {
